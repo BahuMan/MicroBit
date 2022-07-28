@@ -16,12 +16,16 @@ def error(p):
     
 def vergelijk():
     global dx, dy, dz, punten
+    print("x:{}".format(dx))
+    print("y:{}".format(dy))
+    print("z:{}".format((dz)))
     if (dx < 0 or dy < 0 or dz < 0):
         error("verkeerde volgorde van radio boodschappen")
 
     if (dx < streng and dy < streng and dz < streng):
         punten = punten + 1
         dx = dy = dz = -1
+        display.scroll(str(punten), wait=False, loop=True)
 
     
 while True:
@@ -37,4 +41,3 @@ while True:
         vergelijk()
     else:
         error("onbekende radio boodschap: " + msg[0])
-        
