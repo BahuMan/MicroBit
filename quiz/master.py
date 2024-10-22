@@ -1,11 +1,10 @@
-# Add your Python code here. E.g.
 from microbit import *
 import radio
 
 status = "kandidaten"
 kandidaten = {}
 
-radio.config(channel=67, length=16)
+radio.config(channel=67, length=32)
 radio.on()
 
 sleep(100)
@@ -13,16 +12,21 @@ sleep(100)
 def nieuwe_kandidaat(boodschap):
     global status
     global kandidaten
-    if boodschap == "ikke":
-        radio.send("jijbent %d" % len(kandidaten))
-        kandidaten[len(kandidaten)] = "doetmee"
-    display.scroll("Totnu %d kandidaten" % len(kandidaten), wait=False, loop=True)
+    boodschap = boodschap.split()
+    if boodschap[0].startswith("req"):
+        nieuwe = boodschap[1]
+        if not nieuwe in kandidaten:
+            radio.send("welkom %s als %d" % (nieuwe, len(kandidaten)))
+            kandidaten[nieuwe] = str(len(kandidaten))
+        else:
+            display.scroll("dubbel", delay=75);
+    display.scroll("... %d ..." % len(kandidaten), wait=False, loop=True)
     return
 
 def zoek_kandidaten():
     global status
     global kandidaten
-    display.scroll('wie doeter mee?', wait=False, loop=True)
+    display.scroll('wie doeter mee?', delay=75, wait=False, loop=True)
     while status == "kandidaten":
         boodschap = radio.receive()
         if boodschap is not None:
@@ -55,4 +59,3 @@ zoek_kandidaten()
 
 while True:
     stel_vraag()
-
